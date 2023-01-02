@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace JulioMotol\ChannelAttributes\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class ChannelAttributesCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-channel-attributes';
 
     public $description = 'My command';
 
