@@ -4,7 +4,6 @@ namespace JulioMotol\ChannelAttributes;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use JulioMotol\ChannelAttributes\Commands\ChannelAttributesCommand;
 
 class ChannelAttributesServiceProvider extends PackageServiceProvider
 {
@@ -17,9 +16,6 @@ class ChannelAttributesServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('laravel-channel-attributes')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_laravel-channel-attributes_table')
-            ->hasCommand(ChannelAttributesCommand::class);
+            ->hasConfigFile();
     }
 }
