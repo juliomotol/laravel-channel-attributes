@@ -2,26 +2,20 @@
 
 namespace JulioMotol\ChannelAttributes\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use JulioMotol\ChannelAttributes\ChannelAttributesServiceProvider;
+use Illuminate\Support\Facades\Broadcast;
+use JulioMotol\ChannelAttributes\Tests\Support\TestingBroadcaster;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    protected function getPackageProviders($app)
-    {
-        return [
-            ChannelAttributesServiceProvider::class,
-        ];
-    }
-
     public function getEnvironmentSetUp($app)
     {
-        config()->set('database.default', 'testing');
+        config([
+            'database.default' => 'testing',
+            'broadcasting.default' => 'testing',
+            'broadcasting.connections.testing' => ['driver' => 'testing'],
+        ]);
+
+        Broadcast::resolved(fn ($resolved) => $resolved->extend('testing', fn () => new TestingBroadcaster));
     }
 }

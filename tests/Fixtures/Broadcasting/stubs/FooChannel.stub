@@ -1,0 +1,10 @@
+<?php
+
+namespace App\Broadcasting;
+
+use JulioMotol\ChannelAttributes\Attributes\Channel;
+
+#[Channel('foo')]
+class FooChannel
+{
+}
