@@ -7,8 +7,8 @@ return [
     'enabled' => true,
 
     /*
-     * Channels in these directories that have channel attributes will automatically be registered. You can specify a
-     * different namespace other than `\App` by providing a different key.
+     * Channels in these directories that have channel attributes will automatically be registered.
+     * You can specify a different namespace other than `\App` by providing a different key.
      *
      * e.g ['\Domain\Post\Broadcasting' => base_path('domain/Post/Broadcasting')]
      */

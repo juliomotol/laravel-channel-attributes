@@ -1,19 +1,31 @@
-# This is my package laravel-channel-attributes
+# Laravel Channel Attributes
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/juliomotol/laravel-channel-attributes.svg?style=flat-square)](https://packagist.org/packages/juliomotol/laravel-channel-attributes)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/juliomotol/laravel-channel-attributes/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/juliomotol/laravel-channel-attributes/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/juliomotol/laravel-channel-attributes/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/juliomotol/laravel-channel-attributes/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/juliomotol/laravel-channel-attributes.svg?style=flat-square)](https://packagist.org/packages/juliomotol/laravel-channel-attributes)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+Automatically register channel routes using annotations/attributes!
 
-## Support us
+This package is inspired by [`spatie/laravel-route-attributes`](https://github.com/spatie/laravel-route-attributes).
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-channel-attributes.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-channel-attributes)
+> Already using `spatie/laravel-route-attributes`? Congrats, time to ditch that `./routes` directory! (Assuming you're not using the `console.php`)
 
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
+```php
+use JulioMotol\ChannelAttributes\Attributes\Channel;
 
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+#[Channel('foo')]
+class FooChannel
+{
+    //
+}
+```
+
+This will be registered like:
+
+```
+Broadcast::channel('foo', FooChannel::class);
+```
 
 ## Installation
 
@@ -21,13 +33,6 @@ You can install the package via composer:
 
 ```bash
 composer require juliomotol/laravel-channel-attributes
-```
-
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="laravel-channel-attributes-migrations"
-php artisan migrate
 ```
 
 You can publish the config file with:
@@ -40,21 +45,118 @@ This is the contents of the published config file:
 
 ```php
 return [
+    /*
+     *  Automatic registration of channels will only happen if this setting is `true`
+     */
+    'enabled' => true,
+
+    /*
+     * Channels in these directories that have channel attributes will automatically be registered.
+     * You can specify a different namespace other than `\App` by providing a different key.
+     *
+     * e.g ['\Domain\Post\Broadcasting' => base_path('domain/Post/Broadcasting')]
+     */
+    'directories' => [
+        app_path('Broadcasting'),
+    ],
 ];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="laravel-channel-attributes-views"
 ```
 
 ## Usage
 
+To add a channel to be registered automatically, simply add the `JulioMotol\ChannelAttributes\Attributes\Channel` to a channel class
+
+<table>
+<tr>
+<td>Code</td>
+<td>Will be interpreted as:</td>
+</tr>
+<tr>
+<td>
+
 ```php
-$channelAttributes = new JulioMotol\ChannelAttributes();
-echo $channelAttributes->echoPhrase('Hello, JulioMotol!');
+use JulioMotol\ChannelAttributes\Attributes\Channel;
+
+#[Channel('foo')]
+class FooChannel
+{
+    //
+}
 ```
+
+</td>
+<td>
+
+```
+Broadcast::channel('foo', FooChannel::class);
+```
+
+</td>
+</tr>
+</table>
+
+You can add options to channel by doing:
+
+<table>
+<tr>
+<td>Code</td>
+<td>Will be interpreted as:</td>
+</tr>
+<tr>
+<td>
+
+```php
+use JulioMotol\ChannelAttributes\Attributes\Channel;
+
+#[Channel('foo', ['guard' => 'web'])]
+class FooChannel
+{
+    //
+}
+```
+
+</td>
+<td>
+
+```
+Broadcast::channel('foo', FooChannel::class, ['guard' => 'web']);
+```
+
+</td>
+</tr>
+</table>
+
+You can create a channel for a model by doing:
+
+<table>
+<tr>
+<td>Code</td>
+<td>Will be interpreted as:</td>
+</tr>
+<tr>
+<td>
+
+```php
+use JulioMotol\ChannelAttributes\Attributes\Channel;
+use App\Models\Post;
+
+#[Channel(Post::class)]
+class FooChannel
+{
+    //
+}
+```
+
+</td>
+<td>
+
+```
+Broadcast::channel(Post::class, FooChannel::class);
+```
+
+</td>
+</tr>
+</table>
 
 ## Testing
 
