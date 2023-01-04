@@ -29,6 +29,10 @@ class ChannelAttributesServiceProvider extends PackageServiceProvider
         $channelRegistrar = new ChannelRegistrar(app(BroadcastManager::class)->driver());
 
         foreach ($this->getChannelDirectories() as $namespace => $directory) {
+            if (! is_dir($directory)) {
+                continue;
+            }
+
             is_string($namespace)
                 ? $channelRegistrar
                 ->useRootNamespace($namespace)

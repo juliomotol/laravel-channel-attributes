@@ -10,8 +10,12 @@ use JulioMotol\ChannelAttributes\Tests\Fixtures\Broadcasting\Directory\BarChanne
 use JulioMotol\ChannelAttributes\Tests\Fixtures\Broadcasting\Directory\BazChannel as FixtureBazChannel;
 use JulioMotol\ChannelAttributes\Tests\Fixtures\Broadcasting\Directory\FooChannel as FixtureFooChannel;
 
+afterEach(function () {
+    File::deleteDirectory(app_path('Broadcasting'));
+});
+
 it('can register directory', function () {
-    File::makeDirectory(app_path('Broadcasting'), force: true);
+    File::makeDirectory(app_path('Broadcasting'));
 
     collect(File::allFiles(__DIR__.'/Fixtures/Broadcasting/stubs'))
         ->each(function (SplFileInfo $file) {
@@ -21,8 +25,6 @@ it('can register directory', function () {
 
             include $destination;
         });
-
-    config(['channel-attributes.directories' => [app_path('Broadcasting')]]);
 
     app()->register(ChannelAttributesServiceProvider::class);
 
@@ -41,6 +43,17 @@ it('can register directory with custom namespace', function () {
     assertChannelRegistered('foo', FixtureFooChannel::class);
     assertChannelRegistered('bar', FixtureBarChannel::class);
     assertChannelRegistered('baz', FixtureBazChannel::class);
+});
+
+/**
+ * The `./app/Broadcasting` directory is not defined in the boilerplate by default and will only be generated upon
+ * running the `php artisan make:channel` command. This test ensures that we won't encounter a `directory does not exist`
+ * exception.
+ */
+it('will skip missing directories', function () {
+    app()->register(ChannelAttributesServiceProvider::class);
+
+    assertRegisteredChannelsCount(0);
 });
 
 it('won\'t register directory when disabled', function () {
