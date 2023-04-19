@@ -35,13 +35,13 @@ class ChannelAttributesServiceProvider extends PackageServiceProvider
 
             is_string($namespace)
                 ? $channelRegistrar
-                ->useRootNamespace($namespace)
-                ->useBasePath($directory)
-                ->registerDirectory($directory)
+                    ->useRootNamespace($namespace)
+                    ->useBasePath($directory)
+                    ->registerDirectory($directory)
                 : $channelRegistrar
-                ->useRootNamespace(app()->getNamespace())
-                ->useBasePath(app()->path())
-                ->registerDirectory($directory);
+                    ->useRootNamespace(app()->getNamespace())
+                    ->useBasePath(app()->path())
+                    ->registerDirectory($directory);
         }
     }
 
